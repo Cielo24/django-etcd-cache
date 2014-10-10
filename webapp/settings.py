@@ -1,4 +1,12 @@
 # Django settings for webapp project.
+import os
+
+PROJECT_DIR = os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+
+from dotenv import get_dot_env
+
+get_dot_env(BASE_DIR)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
