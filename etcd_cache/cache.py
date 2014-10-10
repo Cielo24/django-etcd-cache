@@ -4,7 +4,7 @@ from etcd import Client
 
 
 class EtcdCache(BaseCache):
-    LOCK_PREFIX = '/locks'
+    CACHE_PREFIX = '/cache'
 
     def __init__(self, location, params):
         super(EtcdCache, self).__init__(params)
@@ -27,7 +27,7 @@ class EtcdCache(BaseCache):
 
     def clear(self):
         try:
-            self.client.delete(self.LOCK_PREFIX, recursive=True, dir=True)
+            self.client.delete(self.CACHE_PREFIX, recursive=True, dir=True)
         except KeyError:
             pass
 
@@ -55,7 +55,7 @@ class EtcdCache(BaseCache):
             return default
 
     def _get_path(self, key, version=None):
-        return '{}/{}'.format(self.LOCK_PREFIX, self.make_key(key, version=version))
+        return '{}/{}'.format(self.CACHE_PREFIX, self.make_key(key, version=version))
 
     def set(self, key, value, timeout=None, version=None):
         path = self._get_path(key, version=None)
