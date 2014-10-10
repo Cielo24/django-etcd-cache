@@ -17,6 +17,19 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+ETCD_HOST = os.environ.get('ETCD_HOST', '127.0.0.1:4001').split(':')
+ETCD_HOST[1] = int(ETCD_HOST[1])
+
+CACHES = {
+    'default': {
+        'BACKEND': 'etcd_cache.cache.EtcdCache',
+        'HOSTS': (
+            ETCD_HOST,
+        ),
+    },
+}
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
