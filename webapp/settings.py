@@ -17,15 +17,17 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-ETCD_HOST = os.environ.get('ETCD_HOST', '127.0.0.1:4001').split(':')
-ETCD_HOST[1] = int(ETCD_HOST[1])
+ETCD_HOSTS = []
+_ = os.environ.get('ETCD_HOST', '127.0.0.1:4001').split(',')
+for host_port in _:
+    split = host_port.split(':')
+    ETCD_HOSTS.append((split[0], int(split[1])))
+
 
 CACHES = {
     'default': {
         'BACKEND': 'etcd_cache.cache.EtcdCache',
-        'HOSTS': (
-            ETCD_HOST,
-        ),
+        'HOSTS': tuple(ETCD_HOSTS),  # must be a tuple for etcd module to be happy
     },
 }
 
