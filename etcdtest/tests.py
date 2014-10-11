@@ -9,6 +9,8 @@ import time
 from django.core.cache import cache
 from django.test import TestCase
 
+cache.CACHE_PREFIX='/testcache'
+
 
 class CacheTestCase(TestCase):
     """
