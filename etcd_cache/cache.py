@@ -44,7 +44,7 @@ class EtcdCache(BaseCache):
         if hasattr(self, '_client'):
             return self._client
 
-        return Client(self.host)
+        return Client(host=self.host[0], port=self.host[1])
 
     def delete(self, key, version=None):
         path = self._get_path(key, version=None)
