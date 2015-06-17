@@ -1,6 +1,5 @@
 from django.core.cache import BaseCache
-
-from etcd import Client
+from etcd.client import Client
 
 
 class EtcdCache(BaseCache):
@@ -11,15 +10,24 @@ class EtcdCache(BaseCache):
 
         hosts = params.get('HOSTS', None)
         if hosts is None:
-            hosts = ['127.0.0.1', 4001]
+            hosts = ['127.0.0.1', 2379]
 
         self.hosts = hosts
+
+    @property
+    def host(self):
+        """
+        TODO: Handle cycling through all available hosts until our initial connection is established.
+        Once established the etcd client will handle failover.
+        :return:
+        """
+        return self.hosts[0]
 
     def add(self, key, value, timeout=None, version=None):
         path = self._get_path(key, version=version)
 
         try:
-            self.client.write(path, value, ttl=timeout, prevExist=False)
+            self.client.node.create_only(path, value, ttl=timeout)
         except KeyError:
             return False
         else:
@@ -27,7 +35,7 @@ class EtcdCache(BaseCache):
 
     def clear(self):
         try:
-            self.client.delete(self.CACHE_PREFIX, recursive=True, dir=True)
+            self.client.node.delete(self.CACHE_PREFIX, recursive=True, dir=True)
         except KeyError:
             pass
 
@@ -36,13 +44,13 @@ class EtcdCache(BaseCache):
         if hasattr(self, '_client'):
             return self._client
 
-        return Client(self.hosts, allow_reconnect=True)
+        return Client(self.host, allow_reconnect=True)
 
     def delete(self, key, version=None):
         path = self._get_path(key, version=None)
 
         try:
-            self.client.delete(path)
+            self.client.node.delete(path)
         except KeyError:
             pass
 
@@ -50,7 +58,7 @@ class EtcdCache(BaseCache):
         path = self._get_path(key, version=version)
 
         try:
-            return self.client.read(path, consistent=True).value
+            return self.client.node.get(path, consistent=True).value
         except KeyError:
             return default
 
