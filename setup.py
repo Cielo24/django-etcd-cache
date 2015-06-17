@@ -12,9 +12,9 @@ README = open(os.path.join(SCRIPT_DIR, 'README.md')).read()
 
 version = '0.0.1'
 
-install_requires = [
-    'python-etcd==0.3.2',
-]
+app_path = os.path.dirname(__file__)
+with open(os.path.join(app_path, 'requirements.txt')) as f:
+    install_requires = list(map(lambda s: s.strip(), f.readlines()))
 
 test_requires = [
     'mock',
