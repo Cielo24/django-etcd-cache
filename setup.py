@@ -14,7 +14,7 @@ README = open(os.path.join(SCRIPT_DIR, 'README.md')).read()
 version = '0.0.1'
 
 app_path = os.path.dirname(__file__)
-pip_reqs = parse_requirements(os.path.join(app_path, 'requirements.txt'))
+pip_reqs = parse_requirements(os.path.join(app_path, 'requirements.txt'), session=False)
 install_requires = [str(ir.req) for ir in pip_reqs]
 print(install_requires)
 test_requires = [
