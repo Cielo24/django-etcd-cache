@@ -58,7 +58,7 @@ class EtcdCache(BaseCache):
         path = self._get_path(key, version=version)
 
         try:
-            return self.client.node.get(path, consistent=True).value
+            return self.client.node.get(path, force_consistent=True).value
         except KeyError:
             return default
 
