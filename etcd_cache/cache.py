@@ -35,7 +35,7 @@ class EtcdCache(BaseCache):
 
     def clear(self):
         try:
-            self.client.node.delete(self.CACHE_PREFIX, recursive=True, dir=True)
+            self.client.directory.delete(self.CACHE_PREFIX)
         except KeyError:
             pass
 
@@ -58,9 +58,11 @@ class EtcdCache(BaseCache):
         path = self._get_path(key, version=version)
 
         try:
-            return self.client.node.get(path, force_consistent=True).value
+            return self.client.node.get(path, force_consistent=True).node.value
         except KeyError:
             return default
+
+
 
     def _get_path(self, key, version=None):
         return '{}/{}'.format(self.CACHE_PREFIX, self.make_key(key, version=version))
