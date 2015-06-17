@@ -1,1 +1,1 @@
--e git+https://github.com/Cielo24/PythonEtcdClient#egg=etcd
+-e git+git@github.com:Cielo24/PythonEtcdClient.git#egg=etcd

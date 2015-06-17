@@ -2,6 +2,7 @@
 import os
 
 from setuptools import setup
+from pip.req import parse_requirements
 
 SCRIPT_DIR = os.path.dirname(__file__)
 if not SCRIPT_DIR:
@@ -13,9 +14,9 @@ README = open(os.path.join(SCRIPT_DIR, 'README.md')).read()
 version = '0.0.1'
 
 app_path = os.path.dirname(__file__)
-with open(os.path.join(app_path, 'requirements.txt')) as f:
-    install_requires = list(map(lambda s: s.strip(), f.readlines()))
-
+pip_reqs = parse_requirements(os.path.join(app_path, 'requirements.txt'))
+install_requires = [str(ir.req) for ir in pip_reqs]
+print(install_requires)
 test_requires = [
     'mock',
 ]
