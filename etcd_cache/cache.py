@@ -68,4 +68,4 @@ class EtcdCache(BaseCache):
     def set(self, key, value, timeout=None, version=None):
         path = self._get_path(key, version=None)
 
-        self.client.set(path, value, ttl=timeout)
+        self.client.node.set(path, value, ttl=timeout)
