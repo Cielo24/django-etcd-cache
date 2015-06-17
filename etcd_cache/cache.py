@@ -1,5 +1,6 @@
 from django.core.cache import BaseCache
 from etcd.client import Client
+from etcd.exceptions import EtcdPreconditionException
 
 
 class EtcdCache(BaseCache):
@@ -28,14 +29,14 @@ class EtcdCache(BaseCache):
 
         try:
             self.client.node.create_only(path, value, ttl=timeout)
-        except KeyError:
+        except (KeyError, EtcdPreconditionException):
             return False
         else:
             return True
 
     def clear(self):
         try:
-            self.client.directory.delete(self.CACHE_PREFIX)
+            self.client.directory.delete_recursive(self.CACHE_PREFIX)
         except KeyError:
             pass
 
